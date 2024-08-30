@@ -1,0 +1,1 @@
+goctl model mysql ddl -c -src auth.sql -dir .
