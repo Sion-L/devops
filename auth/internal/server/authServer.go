@@ -22,6 +22,11 @@ func NewAuthServer(svcCtx *svc.ServiceContext) *AuthServer {
 	}
 }
 
+func (s *AuthServer) GetAuthSource(ctx context.Context, in *auth.AuthSource) (*auth.TypeResp, error) {
+	l := logic.NewGetAuthSourceLogic(ctx, s.svcCtx)
+	return l.GetAuthSource(in)
+}
+
 func (s *AuthServer) Login(ctx context.Context, in *auth.LoginReq) (*auth.LoginResp, error) {
 	l := logic.NewLoginLogic(ctx, s.svcCtx)
 	return l.Login(in)

@@ -19,13 +19,15 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Auth_Login_FullMethodName = "/auth.Auth/Login"
+	Auth_GetAuthSource_FullMethodName = "/auth.Auth/GetAuthSource"
+	Auth_Login_FullMethodName         = "/auth.Auth/Login"
 )
 
 // AuthClient is the client API for Auth service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthClient interface {
+	GetAuthSource(ctx context.Context, in *AuthSource, opts ...grpc.CallOption) (*TypeResp, error)
 	Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error)
 }
 
@@ -35,6 +37,16 @@ type authClient struct {
 
 func NewAuthClient(cc grpc.ClientConnInterface) AuthClient {
 	return &authClient{cc}
+}
+
+func (c *authClient) GetAuthSource(ctx context.Context, in *AuthSource, opts ...grpc.CallOption) (*TypeResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TypeResp)
+	err := c.cc.Invoke(ctx, Auth_GetAuthSource_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *authClient) Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error) {
@@ -51,6 +63,7 @@ func (c *authClient) Login(ctx context.Context, in *LoginReq, opts ...grpc.CallO
 // All implementations must embed UnimplementedAuthServer
 // for forward compatibility.
 type AuthServer interface {
+	GetAuthSource(context.Context, *AuthSource) (*TypeResp, error)
 	Login(context.Context, *LoginReq) (*LoginResp, error)
 	mustEmbedUnimplementedAuthServer()
 }
@@ -62,6 +75,9 @@ type AuthServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAuthServer struct{}
 
+func (UnimplementedAuthServer) GetAuthSource(context.Context, *AuthSource) (*TypeResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAuthSource not implemented")
+}
 func (UnimplementedAuthServer) Login(context.Context, *LoginReq) (*LoginResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
@@ -84,6 +100,24 @@ func RegisterAuthServer(s grpc.ServiceRegistrar, srv AuthServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&Auth_ServiceDesc, srv)
+}
+
+func _Auth_GetAuthSource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AuthSource)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).GetAuthSource(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Auth_GetAuthSource_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).GetAuthSource(ctx, req.(*AuthSource))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Auth_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -111,6 +145,10 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "auth.Auth",
 	HandlerType: (*AuthServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetAuthSource",
+			Handler:    _Auth_GetAuthSource_Handler,
+		},
 		{
 			MethodName: "Login",
 			Handler:    _Auth_Login_Handler,

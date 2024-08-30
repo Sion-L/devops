@@ -13,10 +13,13 @@ import (
 )
 
 type (
-	LoginReq  = auth.LoginReq
-	LoginResp = auth.LoginResp
+	AuthSource = auth.AuthSource
+	LoginReq   = auth.LoginReq
+	LoginResp  = auth.LoginResp
+	TypeResp   = auth.TypeResp
 
 	Auth interface {
+		GetAuthSource(ctx context.Context, in *AuthSource, opts ...grpc.CallOption) (*TypeResp, error)
 		Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error)
 	}
 
@@ -29,6 +32,11 @@ func NewAuth(cli zrpc.Client) Auth {
 	return &defaultAuth{
 		cli: cli,
 	}
+}
+
+func (m *defaultAuth) GetAuthSource(ctx context.Context, in *AuthSource, opts ...grpc.CallOption) (*TypeResp, error) {
+	client := auth.NewAuthClient(m.cli.Conn())
+	return client.GetAuthSource(ctx, in, opts...)
 }
 
 func (m *defaultAuth) Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error) {
