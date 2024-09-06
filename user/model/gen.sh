@@ -1,0 +1,1 @@
+goctl model mysql ddl -c -src user.sql -dir .

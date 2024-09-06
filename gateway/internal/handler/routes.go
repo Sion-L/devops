@@ -4,7 +4,7 @@ package handler
 import (
 	"net/http"
 
-	auth "github.com/Sion-L/gateway/internal/handler/auth"
+	user "github.com/Sion-L/gateway/internal/handler/user"
 	"github.com/Sion-L/gateway/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -15,10 +15,20 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
+				Path:    "/ldap/addSource",
+				Handler: user.LdapSourceHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/ldap/verify",
+				Handler: user.LdapVerifyHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
 				Path:    "/login",
-				Handler: auth.LoginHandler(serverCtx),
+				Handler: user.LoginHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api/auth/v1/user"),
+		rest.WithPrefix("/api/user/v1"),
 	)
 }

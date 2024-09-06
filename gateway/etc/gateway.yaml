@@ -1,3 +1,11 @@
 Name: gateway
 Host: 0.0.0.0
 Port: 8888
+Log:
+  Level: debug
+User:
+  Etcd:
+    Hosts:
+      - 192.168.110.121:2379
+    Key: user.rpc
+

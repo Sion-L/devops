@@ -1,0 +1,51 @@
+syntax = "v1"
+
+import "resp.api"
+
+type (
+  loginReq {
+    username string `form:"username"`
+    password string `form:"password"`
+  }
+  loginResp {
+    userId uint64 `json:"userId"`
+    username string `json:"username"`
+    token string `json:"token"`
+    expireAt int64 `json:"expireAt"`
+  }
+  ldapVerifyReq {
+    host string `form:"host"`
+    port int64 `form:"port"`
+    dn string `form:"dn"`
+    password string `form:"password"`
+    ou string `form:"ou"`
+    filter string `form:"filter"`
+    userAttr string `form:"userAttr"`
+  }
+  ldapVerifyResp {
+    connectivity bool `json:"connectivity"`
+  }
+  ldapSourceReq {
+    host string `form:"host"`
+    port int64 `form:"port"`
+    dn string `form:"dn"`
+    password string `form:"password"`
+    ou string `form:"ou"`
+    filter string `form:"filter"`
+    userAttr string `form:"userAttr"`
+  }
+)
+
+@server(
+    group: user
+    prefix: api/user/v1
+)
+
+service gateway {
+  @handler login
+  post /login(loginReq) returns(loginResp)
+  @handler ldapVerify
+  post /ldap/verify(ldapVerifyReq) returns(ldapVerifyResp)
+  @handler ldapSource
+  post /ldap/addSource(ldapSourceReq) returns(Response)
+}

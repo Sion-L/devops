@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "./user";
+
+message LdapSourceReq {
+  string host = 1;
+  int64  port = 2;
+  string dn = 3;  // baseDn
+  string password = 4;
+  string ou = 5;
+  string filter = 6; // 用户过滤器
+  string userAttr = 7;  //  用户属性  username, name,email 是jumpserver的用户需要属性
+}
+message LoginReq {
+  string  username = 1;
+  string  password  = 2;
+}
+
+message LoginResp {
+  uint64 userId = 1;
+  string  username = 2;
+  string  token = 3;
+  int64 expireAt = 4;
+}
+
+message LdapSourceResp {
+}
+
+message LdapVerifyResp {
+  bool connectivity = 1;
+}
+
+message LdapVerifyReq {
+  string host = 1;
+  int64  port = 2;
+  string dn = 3;  // baseDn
+  string password = 4;
+  string ou = 5;
+  string filter = 6; // 用户过滤器
+  string userAttr = 7;  //  用户属性  username, name,email 是jumpserver的用户需要属性
+}
+
+service User {
+  rpc Login(LoginReq) returns(LoginResp);
+  rpc LdapSource(LdapSourceReq) returns(LdapSourceResp);
+  rpc LdapVerify(LdapVerifyReq) returns(LdapVerifyResp);
+}
+
