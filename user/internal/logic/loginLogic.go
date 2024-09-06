@@ -66,8 +66,8 @@ func (l *LoginLogic) LdapLogin(in *user.LoginReq, users *model.AuthUsers) (*user
 	}
 	ldap := &pkg.LDAPServer{
 		ServerUrl:  ldapSettings[pkg.LDAP_URL],
-		BaseDN:     ldapSettings[pkg.LDAP_BINDDN],
-		BindDN:     ldapSettings[pkg.LDAP_OU],
+		BaseDN:     ldapSettings[pkg.LDAP_OU],
+		BindDN:     ldapSettings[pkg.LDAP_BINDDN],
 		BindPass:   ldapSettings[pkg.LDAP_PASSWORD],
 		UserFilter: ldapSettings[pkg.LDAP_FILTER],
 		UserAttr:   ldapSettings[pkg.LDAP_USERATTR],

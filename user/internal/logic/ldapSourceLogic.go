@@ -33,7 +33,7 @@ func NewLdapSourceLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LdapSo
 
 func (l *LdapSourceLogic) LdapSource(in *user.LdapSourceReq) (*user.LdapSourceResp, error) {
 	if err := l.SyncLdap(in); err != nil {
-		return &user.LdapSourceResp{}, nil
+		return &user.LdapSourceResp{}, err
 	}
 	return &user.LdapSourceResp{}, nil
 }
@@ -41,8 +41,8 @@ func (l *LdapSourceLogic) LdapSource(in *user.LdapSourceReq) (*user.LdapSourceRe
 func (l *LdapSourceLogic) SyncLdap(in *user.LdapSourceReq) error {
 	ldap := &pkg.LDAPServer{
 		ServerUrl:  fmt.Sprintf("ldap://%s:%d", in.Host, in.Port),
-		BaseDN:     in.Dn,
-		BindDN:     in.Ou,
+		BaseDN:     in.Ou,
+		BindDN:     in.Dn,
 		BindPass:   in.Password,
 		UserFilter: in.Filter,
 		UserAttr:   in.UserAttr,

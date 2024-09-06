@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	pkg "github.com/Sion-L/devops/pkg/user"
 	"github.com/Sion-L/devops/user/internal/svc"
@@ -28,8 +29,8 @@ func NewLdapVerifyLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LdapVe
 func (l *LdapVerifyLogic) LdapVerify(in *user.LdapVerifyReq) (*user.LdapVerifyResp, error) {
 	ldap := &pkg.LDAPServer{
 		ServerUrl:  fmt.Sprintf("ldap://%s:%d", in.Host, in.Port),
-		BaseDN:     in.Dn,
-		BindDN:     in.Ou,
+		BaseDN:     in.Ou,
+		BindDN:     in.Dn,
 		BindPass:   in.Password,
 		UserFilter: in.Filter,
 		UserAttr:   fmt.Sprintf(`%s`, in.UserAttr),
@@ -39,13 +40,13 @@ func (l *LdapVerifyLogic) LdapVerify(in *user.LdapVerifyReq) (*user.LdapVerifyRe
 		return &user.LdapVerifyResp{
 			Connectivity: false,
 		}, err
-	}
-
-	err := l.WriteLdapSettings(in)
-	if err != nil {
-		return &user.LdapVerifyResp{
-			Connectivity: false,
-		}, err
+	} else {
+		err := l.WriteLdapSettings(in)
+		if err != nil {
+			return &user.LdapVerifyResp{
+				Connectivity: false,
+			}, err
+		}
 	}
 
 	return &user.LdapVerifyResp{
@@ -94,8 +95,25 @@ func (l *LdapVerifyLogic) WriteLdapSettings(in *user.LdapVerifyReq) error {
 	}
 
 	for _, setting := range settings {
-		if _, err := l.svcCtx.SettingsModel.Insert(l.ctx, &setting); err != nil {
-			return fmt.Errorf("failed to insert ldap settings: %v", err)
+		// 检查配置是否已存在
+		existingSetting, err := l.svcCtx.SettingsModel.FindOneByName(l.ctx, setting.Name)
+		if err != nil && !errors.Is(err, model.ErrNotFound) {
+			return fmt.Errorf("failed to check existing ldap setting: %v", err)
+		}
+
+		if existingSetting != nil {
+			// 更新现有配置
+			existingSetting.Value = setting.Value
+			existingSetting.Category = setting.Category
+			existingSetting.Encrypted = setting.Encrypted
+			if err := l.svcCtx.SettingsModel.Update(l.ctx, existingSetting); err != nil {
+				return fmt.Errorf("failed to update ldap setting: %v", err)
+			}
+		} else {
+			// 插入新的配置
+			if _, err := l.svcCtx.SettingsModel.Insert(l.ctx, &setting); err != nil {
+				return fmt.Errorf("failed to insert ldap settings: %v", err)
+			}
 		}
 	}
 
