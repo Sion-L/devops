@@ -2,9 +2,8 @@ package model
 
 import (
 	"context"
-	"errors"
 	"fmt"
-
+	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
@@ -31,22 +30,30 @@ func NewSettingsModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Option
 	}
 }
 
-func (m *defaultSettingsModel) FindLdapSettings(ctx context.Context) (map[string]string, error) {
-	var settings []Settings
-	result := make(map[string]string)
-	query := "SELECT name,value FROM %s WHERE name IN ('AUTH_LDAP_SERVER_URI', 'AUTH_LDAP_BIND_PASSWORD', 'AUTH_LDAP_BIND_DN', 'AUTH_LDAP_SEARCH_FILTER', 'AUTH_LDAP_SEARCH_OU', 'AUTH_LDAP_SEARCH_FILTER')"
-	sqlJoint := fmt.Sprintf(query, m.table)
-	err := m.QueryRowsNoCacheCtx(ctx, &settings, sqlJoint)
-	switch {
-	case err == nil:
-		for _, setting := range settings {
-			result[setting.Name] = setting.Value
-		}
-		return result, nil
-	case errors.Is(err, sqlc.ErrNotFound):
-		return nil, ErrNotFound
-	default:
-		return nil, err
-	}
+func (m *defaultSettingsModel) FindLdapSettings(ctx context.Context, settings []string) ([]map[string]string, error) {
 
+	result := make([]map[string]string, 10)
+	for _, setting := range settings {
+		settingsNameKey := fmt.Sprintf("%s%v", cacheSettingsNamePrefix, setting)
+		var resp Settings
+		err := m.QueryRowIndexCtx(ctx, &resp, settingsNameKey, m.formatPrimary, func(ctx context.Context, conn sqlx.SqlConn, v any) (i any, e error) {
+			query := fmt.Sprintf("select %s from %s where `name` = ? limit 1", settingsRows, m.table)
+			if err := conn.QueryRowCtx(ctx, &resp, query, setting); err != nil {
+				return nil, err
+			}
+			return resp.Id, nil
+		}, m.queryPrimary)
+		switch err {
+		case nil:
+			result = append(result, map[string]string{
+				setting: resp.Value,
+			})
+		case sqlc.ErrNotFound:
+			return nil, ErrNotFound
+		default:
+			return nil, err
+		}
+	}
+	logx.Info("result: %v", result)
+	return result, nil
 }

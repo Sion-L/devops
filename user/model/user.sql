@@ -7,7 +7,7 @@ CREATE TABLE `auth_users`  (
     `source` varchar(30) NOT NULL DEFAULT 'local' COMMENT '用户类型1local 2ldap',
     `role_type` tinyint(1) NOT NULL DEFAULT 1 COMMENT '角色类型1管理 2用户',
     `email` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '888' COMMENT '用户邮箱',
-    `mobile` bigint(0) NULL DEFAULT NULL COMMENT '用户手机号',
+    `mobile` varchar(191) NULL DEFAULT NULL COMMENT '用户手机号',
     PRIMARY KEY (`user_id`)
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 

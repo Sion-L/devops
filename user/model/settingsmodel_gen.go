@@ -32,7 +32,7 @@ type (
 		FindOneByName(ctx context.Context, name string) (*Settings, error)
 		Update(ctx context.Context, data *Settings) error
 		Delete(ctx context.Context, id int64) error
-		FindLdapSettings(ctx context.Context) (map[string]string, error)
+		FindLdapSettings(ctx context.Context, settings []string) ([]map[string]string, error)
 	}
 
 	defaultSettingsModel struct {

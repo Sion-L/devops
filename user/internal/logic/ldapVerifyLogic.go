@@ -26,7 +26,7 @@ func NewLdapVerifyLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LdapVe
 	}
 }
 
-func (l *LdapVerifyLogic) LdapVerify(in *user.LdapVerifyReq) (*user.LdapVerifyResp, error) {
+func (l *LdapVerifyLogic) LdapVerify(in *user.LdapVerifyReq) (*user.Empty, error) {
 	ldap := &pkg.LDAPServer{
 		ServerUrl:  fmt.Sprintf("ldap://%s:%d", in.Host, in.Port),
 		BaseDN:     in.Ou,
@@ -37,21 +37,15 @@ func (l *LdapVerifyLogic) LdapVerify(in *user.LdapVerifyReq) (*user.LdapVerifyRe
 	}
 
 	if _, err := ldap.Conn(); err != nil {
-		return &user.LdapVerifyResp{
-			Connectivity: false,
-		}, err
+		return nil, err
 	} else {
 		err := l.WriteLdapSettings(in)
 		if err != nil {
-			return &user.LdapVerifyResp{
-				Connectivity: false,
-			}, err
+			return nil, err
 		}
 	}
 
-	return &user.LdapVerifyResp{
-		Connectivity: true,
-	}, nil
+	return nil, nil
 }
 
 func (l *LdapVerifyLogic) WriteLdapSettings(in *user.LdapVerifyReq) error {

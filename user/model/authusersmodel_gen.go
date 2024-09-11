@@ -27,9 +27,9 @@ var (
 type (
 	authUsersModel interface {
 		Insert(ctx context.Context, data *AuthUsers) (sql.Result, error)
-		FindOne(ctx context.Context, userId uint64) (*AuthUsers, error)
+		FindOne(ctx context.Context, userId int64) (*AuthUsers, error)
 		Update(ctx context.Context, data *AuthUsers) error
-		Delete(ctx context.Context, userId uint64) error
+		Delete(ctx context.Context, userId int64) error
 		FindOneByUser(ctx context.Context, user string) (*AuthUsers, error)
 	}
 
@@ -39,15 +39,15 @@ type (
 	}
 
 	AuthUsers struct {
-		UserId   uint64        `db:"user_id"`   // 用户ID
-		Username string        `db:"username"`  // 用户登录名
-		Password string        `db:"password"`  // 用户登录密码
-		NickName string        `db:"nick_name"` // 用户昵称
-		RoleName string        `db:"role_name"` // 角色名;管理员,普通用户
-		Source   string        `db:"source"`    // 用户类型1local 2ldap
-		RoleType int64         `db:"role_type"` // 角色类型1管理 2用户
-		Email    string        `db:"email"`     // 用户邮箱
-		Mobile   sql.NullInt64 `db:"mobile"`    // 用户手机号
+		UserId   int64         `db:"user_id"`   // 用户ID
+		Username string         `db:"username"`  // 用户登录名
+		Password string         `db:"password"`  // 用户登录密码
+		NickName string         `db:"nick_name"` // 用户昵称
+		RoleName string         `db:"role_name"` // 角色名;管理员,普通用户
+		Source   string         `db:"source"`    // 用户类型1local 2ldap
+		RoleType int64          `db:"role_type"` // 角色类型1管理 2用户
+		Email    string         `db:"email"`     // 用户邮箱
+		Mobile   string `db:"mobile"`    // 用户手机号
 	}
 )
 
@@ -58,7 +58,7 @@ func newAuthUsersModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Optio
 	}
 }
 
-func (m *defaultAuthUsersModel) Delete(ctx context.Context, userId uint64) error {
+func (m *defaultAuthUsersModel) Delete(ctx context.Context, userId int64) error {
 	authUsersUserIdKey := fmt.Sprintf("%s%v", cacheAuthUsersUserIdPrefix, userId)
 	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("delete from %s where `user_id` = ?", m.table)
@@ -67,7 +67,7 @@ func (m *defaultAuthUsersModel) Delete(ctx context.Context, userId uint64) error
 	return err
 }
 
-func (m *defaultAuthUsersModel) FindOne(ctx context.Context, userId uint64) (*AuthUsers, error) {
+func (m *defaultAuthUsersModel) FindOne(ctx context.Context, userId int64) (*AuthUsers, error) {
 	authUsersUserIdKey := fmt.Sprintf("%s%v", cacheAuthUsersUserIdPrefix, userId)
 	var resp AuthUsers
 	err := m.QueryRowCtx(ctx, &resp, authUsersUserIdKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {

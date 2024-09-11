@@ -1,7 +1,14 @@
 syntax = "v1"
 
-type Response {
+type ResponseWithData {
     code    int    `json:"code"`    // 状态码
     message string `json:"message"` // 消息
     data    interface{}   `json:"data"`    // 数据
 }
+
+type Response {
+    code int `json:"code"`
+    message string `json:"message"`
+}
+
+

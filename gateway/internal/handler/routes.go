@@ -15,8 +15,48 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
+				Path:    "/addUser",
+				Handler: user.AddUserHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/deleteUser",
+				Handler: user.DeleteUserHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/ldap/addMemberOfGroup",
+				Handler: user.AddMemberOfGroupHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
 				Path:    "/ldap/addSource",
 				Handler: user.LdapSourceHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/ldap/addUserToMemberOfGroup",
+				Handler: user.AddUserToMemberOfGroupHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/ldap/delMemberOfGroup",
+				Handler: user.DelMemberOfGroupHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/ldap/getMemberOfGroups",
+				Handler: user.GetMemberOfGroupsHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/ldap/getUsersInMemberOfGroup",
+				Handler: user.GetUsersInMemberOfGroupHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/ldap/removeUserToMemberOfGroup",
+				Handler: user.RemoveUserToMemberOfGroupHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,

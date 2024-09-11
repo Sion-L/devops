@@ -34,14 +34,12 @@ func (l *LdapSourceLogic) LdapSource(req *types.LdapSourceReq) (resp *types.Resp
 		Filter:   req.Filter,
 		UserAttr: req.UserAttr,
 	}
-	res, err := l.svcCtx.User.LdapSource(l.ctx, in)
-	if err != nil {
+	if _, err = l.svcCtx.User.LdapSource(l.ctx, in); err != nil {
 		return nil, err
 	}
 
 	return &types.Response{
 		Code:    http.StatusOK,
-		Data:    res,
-		Message: "添加Ldap认证源成功",
+		Message: "同步ldap用户成功",
 	}, nil
 }

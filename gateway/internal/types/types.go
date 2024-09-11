@@ -2,9 +2,47 @@
 package types
 
 type Response struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
+
+type ResponseWithData struct {
 	Code    int         `json:"code"`    // 状态码
 	Message string      `json:"message"` // 消息
 	Data    interface{} `json:"data"`    // 数据
+}
+
+type AddMemberOfGroupReq struct {
+	Group string `json:"group"`
+}
+
+type AddUserReq struct {
+	Username string `form:"username"`
+	Password string `form:"password"`
+	NickName string `form:"nick_name"`
+	Email    string `form:"email"`
+	Mobile   string `form:"mobile"`
+	Source   string `form:"source"`
+}
+
+type AddUserToMemberOfGroupReq struct {
+	Usernmae string `json:"usernmae"`
+	Group    string `json:"group"`
+}
+
+type DelMemberOfGroupReq struct {
+	Group string `json:"group"`
+}
+
+type DeleteUserResp struct {
+	UserId int64 `json:"userId"`
+}
+
+type GetMemberOfGroupsReq struct {
+}
+
+type GetUsersInMemberOfGroupReq struct {
+	Group string `json:"group"`
 }
 
 type LdapSourceReq struct {
@@ -27,18 +65,17 @@ type LdapVerifyReq struct {
 	UserAttr string `form:"userAttr"`
 }
 
-type LdapVerifyResp struct {
-	Connectivity bool `json:"connectivity"`
-}
-
 type LoginReq struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+	Username string `form:"username"`
+	Password string `form:"password"`
 }
 
 type LoginResp struct {
-	UserId   uint64 `json:"userId"`
+	UserId   int64  `json:"userId"`
 	Username string `json:"username"`
-	Token    string `json:"token"`
-	ExpireAt int64  `json:"expireAt"`
+}
+
+type RemoveUserToMemberOfGroupReq struct {
+	Usernmae string `json:"usernmae"`
+	Group    string `json:"group"`
 }

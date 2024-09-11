@@ -2,7 +2,6 @@ package logic
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"fmt"
 
@@ -31,11 +30,11 @@ func NewLdapSourceLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LdapSo
 	}
 }
 
-func (l *LdapSourceLogic) LdapSource(in *user.LdapSourceReq) (*user.LdapSourceResp, error) {
+func (l *LdapSourceLogic) LdapSource(in *user.LdapSourceReq) (*user.Empty, error) {
 	if err := l.SyncLdap(in); err != nil {
-		return &user.LdapSourceResp{}, err
+		return &user.Empty{}, err
 	}
-	return &user.LdapSourceResp{}, nil
+	return &user.Empty{}, nil
 }
 
 func (l *LdapSourceLogic) SyncLdap(in *user.LdapSourceReq) error {
@@ -55,35 +54,38 @@ func (l *LdapSourceLogic) SyncLdap(in *user.LdapSourceReq) error {
 
 	for _, userAttr := range usersAttr {
 		existingUser, err := l.svcCtx.AuthUsersModel.FindOneByUser(l.ctx, userAttr.Username)
-		if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		if err != nil && !errors.Is(err, model.ErrNotFound) {
 			return err
 		}
+
+		l.Logger.Infof("某些用户没有mobile字段: %v", userAttr)
 
 		userInfo := &model.AuthUsers{
 			UserId:   pkg.GenerateUserId(1),
 			Username: userAttr.Username,
-			Password: "", // Usually passwords are not synced from LDAP
+			Password: "",
 			NickName: userAttr.NickName,
 			RoleName: "管理员",
 			Source:   "ldap",
-			RoleType: 0, // Default to admin role
+			RoleType: 1,
 			Email:    userAttr.Email,
-			Mobile:   sql.NullInt64{},
+			Mobile:   userAttr.Mobile, // 特殊场景下某些用户ldap中没有这个字段
 		}
 
 		if existingUser != nil {
+			l.Logger.Info("查出来的用户: %v", existingUser)
 			userInfo.UserId = existingUser.UserId // Keep the existing user ID
 			err = l.svcCtx.AuthUsersModel.Update(l.ctx, userInfo)
 			if err != nil {
 				return err
 			}
-			l.Logger.Info("Updated existing LDAP user information: ", zap.Any("user", userInfo))
+			l.Logger.Info("[mysql] Updated existing LDAP user information: ", zap.Any("user", userInfo))
 		} else {
 			_, err := l.svcCtx.AuthUsersModel.Insert(l.ctx, userInfo)
 			if err != nil {
 				return err
 			}
-			l.Logger.Info("Inserted new LDAP user information: ", zap.Any("user", userInfo))
+			l.Logger.Info("[mysql] Inserted new LDAP user information: ", zap.Any("user", userInfo))
 		}
 	}
 

@@ -14,23 +14,16 @@ message LdapSourceReq {
   string userAttr = 7;  //  用户属性  username, name,email 是jumpserver的用户需要属性
 }
 message LoginReq {
-  string  username = 1;
-  string  password  = 2;
+  string username = 1;
+  string password = 2;
 }
 
 message LoginResp {
-  uint64 userId = 1;
-  string  username = 2;
-  string  token = 3;
-  int64 expireAt = 4;
+  int64 userId = 1;
+  string username = 2;
 }
 
-message LdapSourceResp {
-}
-
-message LdapVerifyResp {
-  bool connectivity = 1;
-}
+message Empty {}
 
 message LdapVerifyReq {
   string host = 1;
@@ -42,9 +35,69 @@ message LdapVerifyReq {
   string userAttr = 7;  //  用户属性  username, name,email 是jumpserver的用户需要属性
 }
 
+message AddUserReq {
+  string username = 1;
+  string password = 2;
+  string nickName = 3;
+  string email = 4;
+  string mobile = 5;
+  string source = 6;
+}
+
+message DeleteUserReq {
+  int64 userId = 1;
+}
+
+// 获取ldap中所有memberof属性组
+message GetMemberOfGroupsReq {
+}
+
+message GetMemberOfGroupsResp {
+  repeated string groups = 1;
+}
+
+// ldap添加新的memberof属性组
+message AddMemberOfGroupReq {
+  string group = 1;
+}
+
+// ldap删除memberof属性组
+message DelMemberOfGroupReq {
+  string group = 1;
+}
+
+// 获取指定memberof属性组中的所有用户
+message GetUsersInMemberOfGroupReq {
+  string group = 1;
+}
+
+message GetUsersInMemberOfGroupResp {
+  repeated string users = 1;
+}
+
+// 添加用户到属性组
+message AddUserToMemberOfGroupReq {
+  string username = 1;
+  string group = 2;
+}
+
+// 移除指定用户的memberof属性
+message RemoveUserToMemberOfGroupReq {
+  string username = 1;
+  string group = 2;
+}
+
 service User {
   rpc Login(LoginReq) returns(LoginResp);
-  rpc LdapSource(LdapSourceReq) returns(LdapSourceResp);
-  rpc LdapVerify(LdapVerifyReq) returns(LdapVerifyResp);
+  rpc LdapSource(LdapSourceReq) returns(Empty);
+  rpc LdapVerify(LdapVerifyReq) returns(Empty);
+  rpc AddUser(AddUserReq) returns(Empty);
+  rpc DeleteUser(DeleteUserReq) returns(Empty);
+  rpc GetMemberGroups(GetMemberOfGroupsReq) returns(GetMemberOfGroupsResp);
+  rpc AddMemberGroup(AddMemberOfGroupReq)  returns(Empty);
+  rpc DelMemberGroup(DelMemberOfGroupReq) returns(Empty);
+  rpc GetUsersInMemberOfGroup(GetUsersInMemberOfGroupReq) returns(GetUsersInMemberOfGroupResp);
+  rpc AddUserToMemberOfGroup(AddUserToMemberOfGroupReq) returns(Empty);
+  rpc RemoveUserToMemberOfGroup(RemoveUserToMemberOfGroupReq) returns(Empty);
 }
 

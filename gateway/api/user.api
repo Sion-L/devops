@@ -2,39 +2,73 @@ syntax = "v1"
 
 import "resp.api"
 
-type (
-  loginReq {
+type loginReq {
+  username string `form:"username"`
+  password string `form:"password"`
+}
+
+type loginResp {
+  userId int64 `json:"userId"`
+  username string `json:"username"`
+}
+
+type ldapVerifyReq {
+  host string `form:"host"`
+  port int64 `form:"port"`
+  dn string `form:"dn"`
+  password string `form:"password"`
+  ou string `form:"ou"`
+  filter string `form:"filter"`
+  userAttr string `form:"userAttr"`
+}
+
+type deleteUserResp {
+  userId int64 `json:"userId"`
+}
+
+type ldapSourceReq {
+    host string `form:"host"`
+    port int64 `form:"port"`
+    dn string `form:"dn"`
+    password string `form:"password"`
+    ou string `form:"ou"`
+    filter string `form:"filter"`
+    userAttr string `form:"userAttr"`
+}
+
+type addUserReq {
     username string `form:"username"`
     password string `form:"password"`
-  }
-  loginResp {
-    userId uint64 `json:"userId"`
-    username string `json:"username"`
-    token string `json:"token"`
-    expireAt int64 `json:"expireAt"`
-  }
-  ldapVerifyReq {
-    host string `form:"host"`
-    port int64 `form:"port"`
-    dn string `form:"dn"`
-    password string `form:"password"`
-    ou string `form:"ou"`
-    filter string `form:"filter"`
-    userAttr string `form:"userAttr"`
-  }
-  ldapVerifyResp {
-    connectivity bool `json:"connectivity"`
-  }
-  ldapSourceReq {
-    host string `form:"host"`
-    port int64 `form:"port"`
-    dn string `form:"dn"`
-    password string `form:"password"`
-    ou string `form:"ou"`
-    filter string `form:"filter"`
-    userAttr string `form:"userAttr"`
-  }
-)
+    nickName string `form:"nick_name"`
+    email string `form:"email"`
+    mobile string `form:"mobile"`
+    source string `form:"source"`
+}
+
+type getMemberOfGroupsReq {
+}
+
+type addMemberOfGroupReq {
+    group string `json:"group"`
+}
+
+type delMemberOfGroupReq {
+    group string `json:"group"`
+}
+
+type getUsersInMemberOfGroupReq {
+    group string `json:"group"`
+}
+
+type addUserToMemberOfGroupReq {
+    usernmae string `json:"usernmae"`
+    group string `json:"group"`
+}
+
+type removeUserToMemberOfGroupReq {
+    usernmae string `json:"usernmae"`
+    group string `json:"group"`
+}
 
 @server(
     group: user
@@ -45,7 +79,23 @@ service gateway {
   @handler login
   post /login(loginReq) returns(loginResp)
   @handler ldapVerify
-  post /ldap/verify(ldapVerifyReq) returns(ldapVerifyResp)
+  post /ldap/verify(ldapVerifyReq) returns(Response)
   @handler ldapSource
   post /ldap/addSource(ldapSourceReq) returns(Response)
+  @handler deleteUser
+  post /deleteUser(deleteUserResp) returns(Response)
+  @handler addUser
+  post /addUser(addUserReq) returns(Response)
+  @handler getMemberOfGroups
+  get /ldap/getMemberOfGroups(getMemberOfGroupsReq) returns(ResponseWithData)
+  @handler addMemberOfGroup
+  post /ldap/addMemberOfGroup(addMemberOfGroupReq) returns(Response)
+  @handler delMemberOfGroup
+  post /ldap/delMemberOfGroup(delMemberOfGroupReq) returns(Response)
+  @handler getUsersInMemberOfGroup
+  get /ldap/getUsersInMemberOfGroup(getUsersInMemberOfGroupReq) returns(ResponseWithData)
+  @handler addUserToMemberOfGroup
+  post /ldap/addUserToMemberOfGroup(addUserToMemberOfGroupReq) returns(Response)
+  @handler removeUserToMemberOfGroup
+  post /ldap/removeUserToMemberOfGroup(removeUserToMemberOfGroupReq) returns(Response)
 }

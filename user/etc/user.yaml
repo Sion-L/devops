@@ -9,5 +9,3 @@ Cache:
   - Host: 192.168.110.121:6379
     Type: node
     Pass: "123456"
-Log:
-  Level: debug

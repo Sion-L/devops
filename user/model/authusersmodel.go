@@ -31,10 +31,12 @@ func NewAuthUsersModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Optio
 }
 
 func (m *defaultAuthUsersModel) FindOneByUser(ctx context.Context, user string) (*AuthUsers, error) {
+	authUsersUserIdKey := fmt.Sprintf("%s%v", cacheAuthUsersUserIdPrefix, user)
 	var resp AuthUsers
-	query := "select %s from %s WHERE `username` = ?"
-	sqlJoint := fmt.Sprintf(query, authUsersRows, m.table)
-	err := m.QueryRowsNoCacheCtx(ctx, &resp, sqlJoint, user)
+	err := m.QueryRowCtx(ctx, &resp, authUsersUserIdKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {
+		query := fmt.Sprintf("select %s from %s where `username` = ? limit 1", authUsersRows, m.table)
+		return conn.QueryRowCtx(ctx, v, query, user)
+	})
 	switch err {
 	case nil:
 		return &resp, nil

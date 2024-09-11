@@ -5,6 +5,7 @@ import (
 	"github.com/Sion-L/devops/user/user"
 	"github.com/Sion-L/gateway/internal/svc"
 	"github.com/Sion-L/gateway/internal/types"
+	"net/http"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -23,7 +24,7 @@ func NewLdapVerifyLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LdapVe
 	}
 }
 
-func (l *LdapVerifyLogic) LdapVerify(req *types.LdapVerifyReq) (resp *types.LdapVerifyResp, err error) {
+func (l *LdapVerifyLogic) LdapVerify(req *types.LdapVerifyReq) (resp *types.Response, err error) {
 	in := &user.LdapVerifyReq{
 		Host:     req.Host,
 		Port:     req.Port,
@@ -34,11 +35,12 @@ func (l *LdapVerifyLogic) LdapVerify(req *types.LdapVerifyReq) (resp *types.Ldap
 		UserAttr: req.UserAttr,
 	}
 
-	res, err := l.svcCtx.User.LdapVerify(l.ctx, in)
-	if err != nil {
+	if _, err = l.svcCtx.User.LdapVerify(l.ctx, in); err != nil {
 		return nil, err
 	}
-	return &types.LdapVerifyResp{
-		Connectivity: res.Connectivity,
+
+	return &types.Response{
+		Code:    http.StatusOK,
+		Message: "success",
 	}, nil
 }

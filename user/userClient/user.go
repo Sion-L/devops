@@ -13,17 +13,34 @@ import (
 )
 
 type (
-	LdapSourceReq  = user.LdapSourceReq
-	LdapSourceResp = user.LdapSourceResp
-	LdapVerifyReq  = user.LdapVerifyReq
-	LdapVerifyResp = user.LdapVerifyResp
-	LoginReq       = user.LoginReq
-	LoginResp      = user.LoginResp
+	AddMemberOfGroupReq          = user.AddMemberOfGroupReq
+	AddUserReq                   = user.AddUserReq
+	AddUserToMemberOfGroupReq    = user.AddUserToMemberOfGroupReq
+	DelMemberOfGroupReq          = user.DelMemberOfGroupReq
+	DeleteUserReq                = user.DeleteUserReq
+	Empty                        = user.Empty
+	GetMemberOfGroupsReq         = user.GetMemberOfGroupsReq
+	GetMemberOfGroupsResp        = user.GetMemberOfGroupsResp
+	GetUsersInMemberOfGroupReq   = user.GetUsersInMemberOfGroupReq
+	GetUsersInMemberOfGroupResp  = user.GetUsersInMemberOfGroupResp
+	LdapSourceReq                = user.LdapSourceReq
+	LdapVerifyReq                = user.LdapVerifyReq
+	LoginReq                     = user.LoginReq
+	LoginResp                    = user.LoginResp
+	RemoveUserToMemberOfGroupReq = user.RemoveUserToMemberOfGroupReq
 
 	User interface {
 		Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error)
-		LdapSource(ctx context.Context, in *LdapSourceReq, opts ...grpc.CallOption) (*LdapSourceResp, error)
-		LdapVerify(ctx context.Context, in *LdapVerifyReq, opts ...grpc.CallOption) (*LdapVerifyResp, error)
+		LdapSource(ctx context.Context, in *LdapSourceReq, opts ...grpc.CallOption) (*Empty, error)
+		LdapVerify(ctx context.Context, in *LdapVerifyReq, opts ...grpc.CallOption) (*Empty, error)
+		AddUser(ctx context.Context, in *AddUserReq, opts ...grpc.CallOption) (*Empty, error)
+		DeleteUser(ctx context.Context, in *DeleteUserReq, opts ...grpc.CallOption) (*Empty, error)
+		GetMemberGroups(ctx context.Context, in *GetMemberOfGroupsReq, opts ...grpc.CallOption) (*GetMemberOfGroupsResp, error)
+		AddMemberGroup(ctx context.Context, in *AddMemberOfGroupReq, opts ...grpc.CallOption) (*Empty, error)
+		DelMemberGroup(ctx context.Context, in *DelMemberOfGroupReq, opts ...grpc.CallOption) (*Empty, error)
+		GetUsersInMemberOfGroup(ctx context.Context, in *GetUsersInMemberOfGroupReq, opts ...grpc.CallOption) (*GetUsersInMemberOfGroupResp, error)
+		AddUserToMemberOfGroup(ctx context.Context, in *AddUserToMemberOfGroupReq, opts ...grpc.CallOption) (*Empty, error)
+		RemoveUserToMemberOfGroup(ctx context.Context, in *RemoveUserToMemberOfGroupReq, opts ...grpc.CallOption) (*Empty, error)
 	}
 
 	defaultUser struct {
@@ -42,12 +59,52 @@ func (m *defaultUser) Login(ctx context.Context, in *LoginReq, opts ...grpc.Call
 	return client.Login(ctx, in, opts...)
 }
 
-func (m *defaultUser) LdapSource(ctx context.Context, in *LdapSourceReq, opts ...grpc.CallOption) (*LdapSourceResp, error) {
+func (m *defaultUser) LdapSource(ctx context.Context, in *LdapSourceReq, opts ...grpc.CallOption) (*Empty, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.LdapSource(ctx, in, opts...)
 }
 
-func (m *defaultUser) LdapVerify(ctx context.Context, in *LdapVerifyReq, opts ...grpc.CallOption) (*LdapVerifyResp, error) {
+func (m *defaultUser) LdapVerify(ctx context.Context, in *LdapVerifyReq, opts ...grpc.CallOption) (*Empty, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.LdapVerify(ctx, in, opts...)
+}
+
+func (m *defaultUser) AddUser(ctx context.Context, in *AddUserReq, opts ...grpc.CallOption) (*Empty, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.AddUser(ctx, in, opts...)
+}
+
+func (m *defaultUser) DeleteUser(ctx context.Context, in *DeleteUserReq, opts ...grpc.CallOption) (*Empty, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.DeleteUser(ctx, in, opts...)
+}
+
+func (m *defaultUser) GetMemberGroups(ctx context.Context, in *GetMemberOfGroupsReq, opts ...grpc.CallOption) (*GetMemberOfGroupsResp, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.GetMemberGroups(ctx, in, opts...)
+}
+
+func (m *defaultUser) AddMemberGroup(ctx context.Context, in *AddMemberOfGroupReq, opts ...grpc.CallOption) (*Empty, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.AddMemberGroup(ctx, in, opts...)
+}
+
+func (m *defaultUser) DelMemberGroup(ctx context.Context, in *DelMemberOfGroupReq, opts ...grpc.CallOption) (*Empty, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.DelMemberGroup(ctx, in, opts...)
+}
+
+func (m *defaultUser) GetUsersInMemberOfGroup(ctx context.Context, in *GetUsersInMemberOfGroupReq, opts ...grpc.CallOption) (*GetUsersInMemberOfGroupResp, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.GetUsersInMemberOfGroup(ctx, in, opts...)
+}
+
+func (m *defaultUser) AddUserToMemberOfGroup(ctx context.Context, in *AddUserToMemberOfGroupReq, opts ...grpc.CallOption) (*Empty, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.AddUserToMemberOfGroup(ctx, in, opts...)
+}
+
+func (m *defaultUser) RemoveUserToMemberOfGroup(ctx context.Context, in *RemoveUserToMemberOfGroupReq, opts ...grpc.CallOption) (*Empty, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.RemoveUserToMemberOfGroup(ctx, in, opts...)
 }
