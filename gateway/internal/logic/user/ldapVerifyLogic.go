@@ -34,6 +34,7 @@ func (l *LdapVerifyLogic) LdapVerify(req *types.LdapVerifyReq) (resp *types.Resp
 		Filter:   req.Filter,
 		UserAttr: req.UserAttr,
 	}
+	l.Logger.Infof("jwt载体信息: %v", l.ctx.Value("userId"))
 
 	if _, err = l.svcCtx.User.LdapVerify(l.ctx, in); err != nil {
 		return nil, err

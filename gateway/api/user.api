@@ -8,8 +8,14 @@ type loginReq {
 }
 
 type loginResp {
-  userId int64 `json:"userId"`
   username string `json:"username"`
+  jwtToken jwtToken `json:"jwtToken"`
+}
+
+type jwtToken {
+    accessToken string `json:"accessToken"`
+    accessExpire int64 `json:"accessExpire"`
+    refreshAfter int64 `json:"refreshAfter"`
 }
 
 type ldapVerifyReq {
@@ -74,28 +80,35 @@ type removeUserToMemberOfGroupReq {
     group: user
     prefix: api/user/v1
 )
-
 service gateway {
-  @handler login
-  post /login(loginReq) returns(loginResp)
-  @handler ldapVerify
-  post /ldap/verify(ldapVerifyReq) returns(Response)
-  @handler ldapSource
-  post /ldap/addSource(ldapSourceReq) returns(Response)
-  @handler deleteUser
-  post /deleteUser(deleteUserResp) returns(Response)
-  @handler addUser
-  post /addUser(addUserReq) returns(Response)
-  @handler getMemberOfGroups
-  get /ldap/getMemberOfGroups(getMemberOfGroupsReq) returns(ResponseWithData)
-  @handler addMemberOfGroup
-  post /ldap/addMemberOfGroup(addMemberOfGroupReq) returns(Response)
-  @handler delMemberOfGroup
-  post /ldap/delMemberOfGroup(delMemberOfGroupReq) returns(Response)
-  @handler getUsersInMemberOfGroup
-  get /ldap/getUsersInMemberOfGroup(getUsersInMemberOfGroupReq) returns(ResponseWithData)
-  @handler addUserToMemberOfGroup
-  post /ldap/addUserToMemberOfGroup(addUserToMemberOfGroupReq) returns(Response)
-  @handler removeUserToMemberOfGroup
-  post /ldap/removeUserToMemberOfGroup(removeUserToMemberOfGroupReq) returns(Response)
+    @handler login
+    post /login (loginReq) returns (loginResp)
+}
+
+@server(
+    jwt: Auth
+    group: user
+    prefix: api/user/v1
+)
+service gateway {
+    @handler deleteUser
+    post /deleteUser (deleteUserResp) returns (Response)
+    @handler addUser
+    post /addUser (addUserReq) returns (Response)
+    @handler ldapVerify
+    post /ldap/verify(ldapVerifyReq) returns(Response)
+    @handler ldapSource
+    post /ldap/addSource(ldapSourceReq) returns(Response)
+    @handler getMemberOfGroups
+    get /ldap/getMemberOfGroups(getMemberOfGroupsReq) returns(ResponseWithData)
+    @handler addMemberOfGroup
+    post /ldap/addMemberOfGroup(addMemberOfGroupReq) returns(Response)
+    @handler delMemberOfGroup
+    post /ldap/delMemberOfGroup(delMemberOfGroupReq) returns(Response)
+    @handler getUsersInMemberOfGroup
+    get /ldap/getUsersInMemberOfGroup(getUsersInMemberOfGroupReq) returns(ResponseWithData)
+    @handler addUserToMemberOfGroup
+    post /ldap/addUserToMemberOfGroup(addUserToMemberOfGroupReq) returns(Response)
+    @handler removeUserToMemberOfGroup
+    post /ldap/removeUserToMemberOfGroup(removeUserToMemberOfGroupReq) returns(Response)
 }

@@ -45,6 +45,12 @@ type GetUsersInMemberOfGroupReq struct {
 	Group string `json:"group"`
 }
 
+type JwtToken struct {
+	AccessToken  string `json:"accessToken"`
+	AccessExpire int64  `json:"accessExpire"`
+	RefreshAfter int64  `json:"refreshAfter"`
+}
+
 type LdapSourceReq struct {
 	Host     string `form:"host"`
 	Port     int64  `form:"port"`
@@ -71,8 +77,12 @@ type LoginReq struct {
 }
 
 type LoginResp struct {
-	UserId   int64  `json:"userId"`
 	Username string `json:"username"`
+	JwtToken struct {
+		AccessToken  string `json:"accessToken"`
+		AccessExpire int64  `json:"accessExpire"`
+		RefreshAfter int64  `json:"refreshAfter"`
+	} `json:"jwtToken"`
 }
 
 type RemoveUserToMemberOfGroupReq struct {
