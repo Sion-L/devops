@@ -36,9 +36,9 @@ func (m *AuthorizeMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		e, err := casbin.NewEnforcer(mo, policy)
-		if err != nil {
-			httpx.ErrorCtx(r.Context(), w, fmt.Errorf("failed to create casbin enforcer: %v", err))
+		e, err1 := casbin.NewEnforcer(mo, policy)
+		if err1 != nil {
+			httpx.ErrorCtx(r.Context(), w, fmt.Errorf("failed to create casbin enforcer: %v", err1))
 			return
 		}
 
