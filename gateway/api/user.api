@@ -89,7 +89,7 @@ service gateway {
 
 @server(
     jwt: Auth
-    middleware: AuthorizeMiddleware
+    middleware: AuthorizeMiddleware,RefreshJwtMiddleware
     group: user
     prefix: api/user/v1
 )

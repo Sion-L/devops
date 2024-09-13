@@ -16,7 +16,6 @@ func LdapVerifyHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
-
 		l := user.NewLdapVerifyLogic(r.Context(), svcCtx)
 		resp, err := l.LdapVerify(&req)
 		if err != nil {

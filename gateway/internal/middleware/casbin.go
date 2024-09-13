@@ -8,16 +8,13 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-// Authorizer stores the casbin handler
 type Authorizer struct {
 	enforcer  *casbin.Enforcer
 	roleField string
 }
 
-// AuthorizerOption represents an option.
 type AuthorizerOption func(opt *Authorizer)
 
-// WithRoleField returns a custom user unique identity option.
 func WithRoleField(roleField string) AuthorizerOption {
 	return func(opt *Authorizer) {
 		opt.roleField = roleField
@@ -31,22 +28,17 @@ func (a *Authorizer) init(opts ...AuthorizerOption) {
 	}
 }
 
-// NewAuthorizer returns the authorizer, uses a Casbin enforcer as input
 func NewAuthorizer(e *casbin.Enforcer, opts ...AuthorizerOption) *Authorizer {
 	a := &Authorizer{enforcer: e}
-	// Initialize Authorizer with provided options
 	a.init(opts...)
 	return a
 }
 
-// GetRole gets the role from the request context.
 func (a *Authorizer) GetRole(r *http.Request) (string, bool) {
 	role, ok := r.Context().Value(a.roleField).(string)
 	return role, ok
 }
 
-// CheckPermission checks the role/method/path combination from the request.
-// Returns true (permission granted) or false (permission forbidden)
 func (a *Authorizer) CheckPermission(r *http.Request) bool {
 	role, ok := a.GetRole(r)
 	if !ok {
@@ -63,7 +55,6 @@ func (a *Authorizer) CheckPermission(r *http.Request) bool {
 	return allowed
 }
 
-// RequirePermission returns the 403 Forbidden to the client.
 func (a *Authorizer) RequirePermission(writer http.ResponseWriter) {
 	writer.WriteHeader(http.StatusForbidden)
 	writer.Write([]byte("Forbidden: insufficient permissions"))

@@ -1,10 +1,12 @@
 package middleware
 
 import (
+	"fmt"
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	gormadapter "github.com/casbin/gorm-adapter/v2"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
 )
 
@@ -29,13 +31,13 @@ func (m *AuthorizeMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 
 		policy, err := gormadapter.NewAdapter("mysql", m.DataSource, true)
 		if err != nil {
-			http.Error(w, "Failed to connect to policy database", http.StatusInternalServerError)
+			httpx.ErrorCtx(r.Context(), w, fmt.Errorf("failed to connect to policy database: %v", err))
 			return
 		}
 
 		e, err := casbin.NewEnforcer(mo, policy)
 		if err != nil {
-			http.Error(w, "Failed to create Casbin enforcer", http.StatusInternalServerError)
+			httpx.ErrorCtx(r.Context(), w, fmt.Errorf("failed to create casbin enforcer: %v", err))
 			return
 		}
 
