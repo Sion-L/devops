@@ -2,6 +2,6 @@ go 1.21.0
 
 use (
 	./gateway
-	./pkg
+	./core
 	./user
 )

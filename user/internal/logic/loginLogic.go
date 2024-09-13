@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	pkg "github.com/Sion-L/devops/pkg/user"
+	pkg "github.com/Sion-L/devops/core/user"
 	"github.com/Sion-L/devops/user/internal/svc"
 	"github.com/Sion-L/devops/user/model"
 	"github.com/Sion-L/devops/user/user"

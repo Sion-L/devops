@@ -9,7 +9,7 @@ import (
 
 	"go.uber.org/zap"
 
-	pkg "github.com/Sion-L/devops/pkg/user"
+	pkg "github.com/Sion-L/devops/core/user"
 	"github.com/Sion-L/devops/user/internal/svc"
 	"github.com/Sion-L/devops/user/user"
 
