@@ -1,8 +1,9 @@
 p,admin,/api/user/*,GET|POST|PUT|OPTION
 p,dev,/api/user/v1/login,POST
 
-p, pen_admin, data1, GET
-g, /book/:id, pen_admin
+request example:
+dev,/api/user/v1/login,POST
+dev,/api/user/v1/login,GET
 
 
 
