@@ -88,6 +88,11 @@ message RemoveUserToMemberOfGroupReq {
   string group = 2;
 }
 
+message ResetPasswordReq {
+  string username = 1;
+  string password = 2;
+}
+
 service User {
   rpc Login(LoginReq) returns(LoginResp);
   rpc LdapSource(LdapSourceReq) returns(Empty);
@@ -100,5 +105,6 @@ service User {
   rpc GetUsersInMemberOfGroup(GetUsersInMemberOfGroupReq) returns(GetUsersInMemberOfGroupResp);
   rpc AddUserToMemberOfGroup(AddUserToMemberOfGroupReq) returns(Empty);
   rpc RemoveUserToMemberOfGroup(RemoveUserToMemberOfGroupReq) returns(Empty);
+  rpc ResetPassword(ResetPasswordReq) returns(Empty);
 }
 

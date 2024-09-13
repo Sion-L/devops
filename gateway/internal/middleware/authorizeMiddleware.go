@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"fmt"
+	core "github.com/Sion-L/devops/core/user"
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	gormadapter "github.com/casbin/gorm-adapter/v2"
@@ -41,7 +42,7 @@ func (m *AuthorizeMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		a := NewAuthorizer(e, WithRoleField("role"))
+		a := core.NewAuthorizer(e, core.WithRoleField("role"))
 		if !a.CheckPermission(r) {
 			a.RequirePermission(w)
 			return
