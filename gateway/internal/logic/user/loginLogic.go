@@ -38,7 +38,9 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 	}
 	now := time.Now().Unix()
 	accessExpire := l.svcCtx.Config.Auth.AccessExpire
-	jwtToken, err2 := core.GetJwtToken(l.svcCtx.Config.Auth.AccessSecret, now, accessExpire, res.UserId, res.RoleType)
+	refreshAfter := now + accessExpire/2
+	jwtToken, err2 := core.GetJwtToken(l.svcCtx.Config.Auth.AccessSecret,
+		now, accessExpire, refreshAfter, res.UserId, res.RoleType)
 	if err2 != nil {
 		return nil, err2
 	}
@@ -47,7 +49,7 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 		JwtToken: types.JwtToken{
 			AccessToken:  jwtToken,
 			AccessExpire: now + accessExpire,
-			RefreshAfter: now + accessExpire/2,
+			RefreshAfter: refreshAfter,
 		},
 	}, nil
 }
