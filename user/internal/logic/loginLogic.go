@@ -37,6 +37,7 @@ func (l *LoginLogic) Login(in *user.LoginReq) (*user.LoginResp, error) {
 		return &user.LoginResp{}, err
 	}
 
+	l.Logger.Infof("用户信息: %v", u)
 	if u.Source == "local" {
 		return l.LocalLogin(u, in.Password)
 	}
@@ -56,6 +57,7 @@ func (l *LoginLogic) LocalLogin(u *model.AuthUsers, password string) (*user.Logi
 		return &user.LoginResp{
 			UserId:   u.UserId,
 			Username: u.Username,
+			RoleType: u.RoleType,
 		}, nil
 	}
 	return &user.LoginResp{}, fmt.Errorf("failed to authenticate user: %s", u.Username)
@@ -72,6 +74,7 @@ func (l *LoginLogic) LdapLogin(in *user.LoginReq, u *model.AuthUsers) (*user.Log
 	return &user.LoginResp{
 		UserId:   u.UserId,
 		Username: u.Username,
+		RoleType: u.RoleType,
 	}, nil
 }
 

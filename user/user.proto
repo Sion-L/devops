@@ -21,6 +21,7 @@ message LoginReq {
 message LoginResp {
   int64 userId = 1;
   string username = 2;
+  int64 roleType = 3;
 }
 
 message Empty {}

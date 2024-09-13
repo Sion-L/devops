@@ -12,4 +12,7 @@ type Config struct {
 		AccessSecret string
 		AccessExpire int64
 	}
+	Authorize struct {
+		DataSource string
+	}
 }

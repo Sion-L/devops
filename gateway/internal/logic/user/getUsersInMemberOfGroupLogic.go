@@ -5,8 +5,8 @@ import (
 	"github.com/Sion-L/devops/user/user"
 	"net/http"
 
-	"github.com/Sion-L/gateway/internal/svc"
-	"github.com/Sion-L/gateway/internal/types"
+	"github.com/Sion-L/devops/gateway/internal/svc"
+	"github.com/Sion-L/devops/gateway/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

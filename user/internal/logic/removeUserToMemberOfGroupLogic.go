@@ -28,9 +28,9 @@ func (l *RemoveUserToMemberOfGroupLogic) RemoveUserToMemberOfGroup(in *user.Remo
 	if err != nil {
 		return nil, err
 	}
-	err = ldap.RemoveUserFromGroup(in.Username, in.Group)
-	if err != nil {
+	if err = ldap.RemoveUserFromGroup(in.Username, in.Group); err != nil {
 		return nil, err
 	}
+
 	return &user.Empty{}, nil
 }

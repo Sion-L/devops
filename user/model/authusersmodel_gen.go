@@ -39,15 +39,15 @@ type (
 	}
 
 	AuthUsers struct {
-		UserId   int64         `db:"user_id"`   // 用户ID
+		UserId   int64          `db:"user_id"`   // 用户ID
 		Username string         `db:"username"`  // 用户登录名
 		Password string         `db:"password"`  // 用户登录密码
 		NickName string         `db:"nick_name"` // 用户昵称
-		RoleName string         `db:"role_name"` // 角色名;管理员,普通用户
+		RoleName string         `db:"role_name"` // 角色名;管理员admin,开发者dev
 		Source   string         `db:"source"`    // 用户类型1local 2ldap
-		RoleType int64          `db:"role_type"` // 角色类型1管理 2用户
-		Email    string         `db:"email"`     // 用户邮箱
-		Mobile   string `db:"mobile"`    // 用户手机号
+		RoleType int64          `db:"role_type"` // 角色类型1管理员admin 2是开发者dev
+		Email    string 		`db:"email"`     // 用户邮箱
+		Mobile   string 		`db:"mobile"`    // 用户手机号
 	}
 )
 

@@ -3,9 +3,9 @@ package user
 import (
 	"context"
 	"fmt"
+	"github.com/Sion-L/devops/gateway/internal/svc"
+	"github.com/Sion-L/devops/gateway/internal/types"
 	"github.com/Sion-L/devops/user/user"
-	"github.com/Sion-L/gateway/internal/svc"
-	"github.com/Sion-L/gateway/internal/types"
 	"net/http"
 
 	"github.com/zeromicro/go-zero/core/logx"

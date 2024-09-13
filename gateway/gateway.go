@@ -3,12 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
-
-	"github.com/Sion-L/gateway/internal/config"
-	"github.com/Sion-L/gateway/internal/handler"
-	"github.com/Sion-L/gateway/internal/svc"
-
 	"github.com/zeromicro/go-zero/core/conf"
+
+	"github.com/Sion-L/devops/gateway/internal/config"
+	"github.com/Sion-L/devops/gateway/internal/handler"
+	"github.com/Sion-L/devops/gateway/internal/svc"
+
 	"github.com/zeromicro/go-zero/rest"
 )
 

@@ -73,7 +73,6 @@ func (l *LdapSourceLogic) SyncLdap(in *user.LdapSourceReq) error {
 		}
 
 		if existingUser != nil {
-			l.Logger.Info("查出来的用户: %v", existingUser)
 			userInfo.UserId = existingUser.UserId // Keep the existing user ID
 			err = l.svcCtx.AuthUsersModel.Update(l.ctx, userInfo)
 			if err != nil {

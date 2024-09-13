@@ -3,33 +3,33 @@ syntax = "v1"
 import "resp.api"
 
 type loginReq {
-  username string `form:"username"`
-  password string `form:"password"`
+    username string `form:"username"`
+    password string `form:"password"`
 }
 
 type loginResp {
-  username string `json:"username"`
-  jwtToken jwtToken `json:"jwtToken"`
+    username string `json:"username"`
+    jwtToken jwtToken `json:"jwtToken"`
 }
 
 type jwtToken {
-    accessToken string `json:"accessToken"`
-    accessExpire int64 `json:"accessExpire"`
-    refreshAfter int64 `json:"refreshAfter"`
+    accessToken string `json:"accessToken,omitempty"`
+    accessExpire int64 `json:"accessExpire,omitempty"`
+    refreshAfter int64 `json:"refreshAfter,omitempty"`
 }
 
 type ldapVerifyReq {
-  host string `form:"host"`
-  port int64 `form:"port"`
-  dn string `form:"dn"`
-  password string `form:"password"`
-  ou string `form:"ou"`
-  filter string `form:"filter"`
-  userAttr string `form:"userAttr"`
+    host string `form:"host"`
+    port int64 `form:"port"`
+    dn string `form:"dn"`
+    password string `form:"password"`
+    ou string `form:"ou"`
+    filter string `form:"filter"`
+    userAttr string `form:"userAttr"`
 }
 
 type deleteUserResp {
-  userId int64 `json:"userId"`
+    userId int64 `json:"userId"`
 }
 
 type ldapSourceReq {
@@ -83,18 +83,19 @@ type removeUserToMemberOfGroupReq {
 service gateway {
     @handler login
     post /login (loginReq) returns (loginResp)
+    @handler addUser
+    post /addUser (addUserReq) returns (Response)
 }
 
 @server(
     jwt: Auth
+    middleware: AuthorizeMiddleware
     group: user
     prefix: api/user/v1
 )
 service gateway {
     @handler deleteUser
     post /deleteUser (deleteUserResp) returns (Response)
-    @handler addUser
-    post /addUser (addUserReq) returns (Response)
     @handler ldapVerify
     post /ldap/verify(ldapVerifyReq) returns(Response)
     @handler ldapSource

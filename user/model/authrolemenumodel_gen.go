@@ -38,7 +38,7 @@ type (
 	}
 
 	AuthRoleMenu struct {
-		RoleName string `db:"role_name"` // 角色名;管理员,普通用户
+		RoleName string `db:"role_name"` // 角色名;管理员,开发者
 		MenuId   int64  `db:"menu_id"`   // 菜单ID
 	}
 )
