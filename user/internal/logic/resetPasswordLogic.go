@@ -33,11 +33,14 @@ func (l *ResetPasswordLogic) ResetPassword(in *user.ResetPasswordReq) (*user.Emp
 		}
 		return nil, err
 	}
+	l.Logger.Infof("用户信息: %v", u)
 	if u.Source == "ldap" {
+		l.Logger.Info("不应该到这")
 		return l.resetPasswordInLdap(in.Username, in.OldPassword, in.NewPassword)
 	}
 
-	if u.Source == "mysql" {
+	if u.Source == "local" {
+		l.Logger.Info("应该到这")
 		return l.resetPasswordInMysql(u, in.OldPassword, in.NewPassword)
 	}
 
@@ -61,8 +64,10 @@ func (l *ResetPasswordLogic) resetPasswordInMysql(u *model.AuthUsers, oldPasswor
 		if err != nil {
 			return nil, err
 		}
+	} else {
+		return nil, fmt.Errorf("原来的密码不正确")
 	}
-	return nil, fmt.Errorf("原来的密码不正确")
+	return nil, nil
 }
 
 func (l *ResetPasswordLogic) resetPasswordInLdap(username, oldPassword, newPassword string) (*user.Empty, error) {
