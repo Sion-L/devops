@@ -9,8 +9,9 @@ type Config struct {
 	rest.RestConf
 	User zrpc.RpcClientConf
 	Auth struct {
-		AccessSecret string
-		AccessExpire int64
+		AccessSecret         string
+		AccessExpire         int64
+		TokenDisableDuration int64
 	}
 	Authorize struct {
 		DataSource string

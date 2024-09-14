@@ -20,6 +20,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		Config:               c,
 		User:                 userClient.NewUser(zrpc.MustNewClient(c.User)),
 		AuthorizeMiddleware:  middleware.NewAuthorizeMiddleware(c.Authorize.DataSource).Handle,
-		RefreshJwtMiddleware: middleware.NewRefreshJwtMiddleware(c.Auth.AccessSecret, c.Auth.AccessExpire).Handle,
+		RefreshJwtMiddleware: middleware.NewRefreshJwtMiddleware(c.Auth.AccessSecret, c.Auth.AccessExpire, c.Auth.TokenDisableDuration).Handle,
 	}
 }

@@ -10,14 +10,16 @@ import (
 )
 
 type RefreshJwtMiddleware struct {
-	AccessSecret string
-	AccessExpire int64
+	AccessSecret         string
+	AccessExpire         int64
+	TokenDisableDuration int64
 }
 
 func NewRefreshJwtMiddleware(AccessSecret string, AccessExpire int64, TokenDisableDuration int64) *RefreshJwtMiddleware {
 	return &RefreshJwtMiddleware{
-		AccessSecret: AccessSecret,
-		AccessExpire: AccessExpire,
+		AccessSecret:         AccessSecret,
+		AccessExpire:         AccessExpire,
+		TokenDisableDuration: TokenDisableDuration,
 	}
 }
 
@@ -43,7 +45,7 @@ func (m *RefreshJwtMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 		iat := int64(claims["iat"].(float64)) // 获取 token 的 iat (issued at) 字段
 
 		// 检查 token 是否超过禁用时长 超过是三天则token被禁用
-		if now-iat > 259200 {
+		if now-iat > m.TokenDisableDuration {
 			httpx.ErrorCtx(r.Context(), w, fmt.Errorf("token has been disabled due to exceeding the allowed age"))
 			return
 		}
