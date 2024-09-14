@@ -29,10 +29,9 @@ func NewAddUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddUserLo
 
 func (l *AddUserLogic) AddUser(in *user.AddUserReq) (*user.Empty, error) {
 	if in.Source == "ldap" {
-		// 不用同步到mysql了 认证源为ldap 用户登录走的是ldap 不过最好调同步接口同步下
-		//if err := l.AddUserInMysql(in); err != nil {
-		//	return nil, err
-		//}
+		if err := l.AddUserInMysql(in); err != nil {
+			return nil, err
+		}
 		if err := l.AddUserInLdap(in); err != nil {
 			return nil, err
 		}

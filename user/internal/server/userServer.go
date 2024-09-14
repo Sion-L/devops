@@ -76,3 +76,8 @@ func (s *UserServer) RemoveUserToMemberOfGroup(ctx context.Context, in *user.Rem
 	l := logic.NewRemoveUserToMemberOfGroupLogic(ctx, s.svcCtx)
 	return l.RemoveUserToMemberOfGroup(in)
 }
+
+func (s *UserServer) ResetPassword(ctx context.Context, in *user.ResetPasswordReq) (*user.Empty, error) {
+	l := logic.NewResetPasswordLogic(ctx, s.svcCtx)
+	return l.ResetPassword(in)
+}

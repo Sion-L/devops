@@ -89,3 +89,9 @@ type RemoveUserToMemberOfGroupReq struct {
 	Usernmae string `json:"usernmae"`
 	Group    string `json:"group"`
 }
+
+type ResetPasswordReq struct {
+	Username    string `json:"username"`
+	OldPassword string `json:"oldPassword"`
+	NewPassword string `json:"newPassword"`
+}

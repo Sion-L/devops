@@ -76,6 +76,12 @@ type removeUserToMemberOfGroupReq {
     group string `json:"group"`
 }
 
+type resetPasswordReq {
+    username string `json:"username"`
+    oldPassword string `json:"oldPassword"`
+    newPassword string `json:"newPassword"`
+}
+
 @server(
     group: user
     prefix: api/user/v1
@@ -85,6 +91,8 @@ service gateway {
     post /login (loginReq) returns (loginResp)
     @handler addUser
     post /addUser (addUserReq) returns (Response)
+    @handler resetPassword
+    post /resetPassword (resetPasswordReq) returns (Response)
 }
 
 @server(
@@ -112,4 +120,5 @@ service gateway {
     post /ldap/addUserToMemberOfGroup(addUserToMemberOfGroupReq) returns(Response)
     @handler removeUserToMemberOfGroup
     post /ldap/removeUserToMemberOfGroup(removeUserToMemberOfGroupReq) returns(Response)
+
 }

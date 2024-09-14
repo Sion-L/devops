@@ -23,6 +23,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/login",
 				Handler: user.LoginHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/resetPassword",
+				Handler: user.ResetPasswordHandler(serverCtx),
+			},
 		},
 		rest.WithPrefix("/api/user/v1"),
 	)

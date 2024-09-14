@@ -28,6 +28,7 @@ type (
 	LoginReq                     = user.LoginReq
 	LoginResp                    = user.LoginResp
 	RemoveUserToMemberOfGroupReq = user.RemoveUserToMemberOfGroupReq
+	ResetPasswordReq             = user.ResetPasswordReq
 
 	User interface {
 		Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error)
@@ -41,6 +42,7 @@ type (
 		GetUsersInMemberOfGroup(ctx context.Context, in *GetUsersInMemberOfGroupReq, opts ...grpc.CallOption) (*GetUsersInMemberOfGroupResp, error)
 		AddUserToMemberOfGroup(ctx context.Context, in *AddUserToMemberOfGroupReq, opts ...grpc.CallOption) (*Empty, error)
 		RemoveUserToMemberOfGroup(ctx context.Context, in *RemoveUserToMemberOfGroupReq, opts ...grpc.CallOption) (*Empty, error)
+		ResetPassword(ctx context.Context, in *ResetPasswordReq, opts ...grpc.CallOption) (*Empty, error)
 	}
 
 	defaultUser struct {
@@ -107,4 +109,9 @@ func (m *defaultUser) AddUserToMemberOfGroup(ctx context.Context, in *AddUserToM
 func (m *defaultUser) RemoveUserToMemberOfGroup(ctx context.Context, in *RemoveUserToMemberOfGroupReq, opts ...grpc.CallOption) (*Empty, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.RemoveUserToMemberOfGroup(ctx, in, opts...)
+}
+
+func (m *defaultUser) ResetPassword(ctx context.Context, in *ResetPasswordReq, opts ...grpc.CallOption) (*Empty, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.ResetPassword(ctx, in, opts...)
 }

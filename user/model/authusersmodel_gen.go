@@ -89,7 +89,7 @@ func (m *defaultAuthUsersModel) Insert(ctx context.Context, data *AuthUsers) (sq
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, authUsersRowsExpectAutoSet)
 		return conn.ExecCtx(ctx, query, data.UserId, data.Username, data.Password, data.NickName, data.RoleName, data.Source, data.RoleType, data.Email, data.Mobile)
-	}, authUsersUserIdKey)
+	},authUsersUserIdKey)
 	return ret, err
 }
 

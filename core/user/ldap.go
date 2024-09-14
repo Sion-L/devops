@@ -413,3 +413,25 @@ func (l *LDAPServer) GetAllMemberOfGroups() ([]string, error) {
 
 	return groups, nil
 }
+
+func (l *LDAPServer) ModifyUserPassword(username, oldPassword, newPassword string) error {
+	err := l.VerifyLDAPUser(username, oldPassword)
+	if err != nil {
+		return fmt.Errorf("用户原密码错误: %v", err)
+	}
+
+	conn, err := l.Conn()
+	if err != nil {
+		return fmt.Errorf("连接LDAP服务器失败: %v", err)
+	}
+	defer conn.Close()
+
+	userDN := fmt.Sprintf("uid=%s,%s", username, l.BaseDN)
+	passwordModifyRequest := ldap.NewPasswordModifyRequest(userDN, oldPassword, newPassword)
+	_, err = conn.PasswordModify(passwordModifyRequest)
+	if err != nil {
+		return fmt.Errorf("密码修改失败: %v", err)
+	}
+
+	return nil
+}

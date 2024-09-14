@@ -30,6 +30,7 @@ const (
 	User_GetUsersInMemberOfGroup_FullMethodName   = "/user.User/GetUsersInMemberOfGroup"
 	User_AddUserToMemberOfGroup_FullMethodName    = "/user.User/AddUserToMemberOfGroup"
 	User_RemoveUserToMemberOfGroup_FullMethodName = "/user.User/RemoveUserToMemberOfGroup"
+	User_ResetPassword_FullMethodName             = "/user.User/ResetPassword"
 )
 
 // UserClient is the client API for User service.
@@ -47,6 +48,7 @@ type UserClient interface {
 	GetUsersInMemberOfGroup(ctx context.Context, in *GetUsersInMemberOfGroupReq, opts ...grpc.CallOption) (*GetUsersInMemberOfGroupResp, error)
 	AddUserToMemberOfGroup(ctx context.Context, in *AddUserToMemberOfGroupReq, opts ...grpc.CallOption) (*Empty, error)
 	RemoveUserToMemberOfGroup(ctx context.Context, in *RemoveUserToMemberOfGroupReq, opts ...grpc.CallOption) (*Empty, error)
+	ResetPassword(ctx context.Context, in *ResetPasswordReq, opts ...grpc.CallOption) (*Empty, error)
 }
 
 type userClient struct {
@@ -167,6 +169,16 @@ func (c *userClient) RemoveUserToMemberOfGroup(ctx context.Context, in *RemoveUs
 	return out, nil
 }
 
+func (c *userClient) ResetPassword(ctx context.Context, in *ResetPasswordReq, opts ...grpc.CallOption) (*Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, User_ResetPassword_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility.
@@ -182,6 +194,7 @@ type UserServer interface {
 	GetUsersInMemberOfGroup(context.Context, *GetUsersInMemberOfGroupReq) (*GetUsersInMemberOfGroupResp, error)
 	AddUserToMemberOfGroup(context.Context, *AddUserToMemberOfGroupReq) (*Empty, error)
 	RemoveUserToMemberOfGroup(context.Context, *RemoveUserToMemberOfGroupReq) (*Empty, error)
+	ResetPassword(context.Context, *ResetPasswordReq) (*Empty, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -224,6 +237,9 @@ func (UnimplementedUserServer) AddUserToMemberOfGroup(context.Context, *AddUserT
 }
 func (UnimplementedUserServer) RemoveUserToMemberOfGroup(context.Context, *RemoveUserToMemberOfGroupReq) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveUserToMemberOfGroup not implemented")
+}
+func (UnimplementedUserServer) ResetPassword(context.Context, *ResetPasswordReq) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResetPassword not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 func (UnimplementedUserServer) testEmbeddedByValue()              {}
@@ -444,6 +460,24 @@ func _User_RemoveUserToMemberOfGroup_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_ResetPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResetPasswordReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).ResetPassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_ResetPassword_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).ResetPassword(ctx, req.(*ResetPasswordReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -494,6 +528,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RemoveUserToMemberOfGroup",
 			Handler:    _User_RemoveUserToMemberOfGroup_Handler,
+		},
+		{
+			MethodName: "ResetPassword",
+			Handler:    _User_ResetPassword_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
