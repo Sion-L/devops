@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/Sion-L/devops/core"
 
 	"github.com/Sion-L/devops/user/model"
 
@@ -61,7 +62,7 @@ func (l *LdapSourceLogic) SyncLdap(in *user.LdapSourceReq) error {
 		l.Logger.Infof("某些用户没有mobile字段: %v", userAttr)
 
 		userInfo := &model.AuthUsers{
-			UserId:   pkg.GenerateUserId(1),
+			UserId:   core.GenerateUserId(1),
 			Username: userAttr.Username,
 			Password: "",
 			NickName: userAttr.NickName,

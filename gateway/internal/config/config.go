@@ -16,4 +16,8 @@ type Config struct {
 	Authorize struct {
 		DataSource string
 	}
+	WebSocket struct {
+		ReadBufferSize  int
+		WriteBufferSize int
+	}
 }

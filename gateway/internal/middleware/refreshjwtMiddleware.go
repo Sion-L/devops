@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"fmt"
-	core "github.com/Sion-L/devops/core/user"
+	"github.com/Sion-L/devops/core"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"

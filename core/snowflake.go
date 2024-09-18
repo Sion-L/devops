@@ -1,4 +1,4 @@
-package user
+package core
 
 import (
 	"github.com/bwmarrin/snowflake"

@@ -122,3 +122,14 @@ service gateway {
     post /ldap/removeUserToMemberOfGroup(removeUserToMemberOfGroupReq) returns(Response)
 
 }
+
+@server(
+    jwt: Auth
+    middleware: WebSocketMiddleware,AuthorizeMiddleware,RefreshJwtMiddleware
+    group: user
+    prefix: api/user/v1
+)
+service gateway {
+    @handler wsTest
+    get /wsTest () returns (Response)
+}

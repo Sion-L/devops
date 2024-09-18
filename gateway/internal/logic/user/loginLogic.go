@@ -2,7 +2,7 @@ package user
 
 import (
 	"context"
-	core "github.com/Sion-L/devops/core/user"
+	"github.com/Sion-L/devops/core"
 	"github.com/Sion-L/devops/gateway/internal/svc"
 	"github.com/Sion-L/devops/gateway/internal/types"
 	"github.com/Sion-L/devops/user/user"

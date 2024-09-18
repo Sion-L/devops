@@ -12,3 +12,6 @@ Auth:
   TokenDisableDuration: 259200   # 禁用三天前的token
 Authorize:
   DataSource: root:123456@tcp(192.168.110.121:3306)/user
+WebSocket:
+  ReadBufferSize: 1024
+  WriteBufferSize: 1024
