@@ -71,7 +71,7 @@ func (m *WebSocketMiddleware) writePump(c *core.Client) {
 
 	for {
 		select {
-		// 此处是将从客户端接收的消息直接返回
+		// 此处是将从客户端接收的消息直接返回,可根据不同的接口写入不同的消息,根据需求改
 		case message, ok := <-c.Send:
 			if !ok {
 				c.Conn.WriteMessage(websocket.CloseMessage, []byte{})
