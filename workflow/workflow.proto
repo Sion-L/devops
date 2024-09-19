@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package workflow;
+
+option go_package = "./workflow";
+
+message Empty {}
+
+message createPipelineReq {
+  string project = 1;
+  string repo = 2;
+}
+
+service workflow {
+  rpc createPipeline(createPipelineReq) returns(Empty);
+
+}

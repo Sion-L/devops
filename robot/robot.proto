@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package robot;
+
+option go_package = "./robot";
+
+message addRobotReq {
+  int64 type = 1;   // 机器人类型
+
+}
+
+
